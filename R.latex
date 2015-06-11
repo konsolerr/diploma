@@ -1,0 +1,13 @@
+\lstdefinelanguage{R}{%
+  sensitive=false,
+  keywords={class, TRUE, FALSE, function, return, null, catch, if, in, while, do, else, case},
+  showstringspaces=false,
+  morecomment=[l]{\#},
+  morestring=[b]',
+  morestring=[b]",
+    breaklines=true,
+    frame=single,
+    literate=
+        *{\$}{{{\color{black}\$}}}{1}
+        {\%}{{{\color{black}\%}}}{1},
+}

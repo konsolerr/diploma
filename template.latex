@@ -1,0 +1,22 @@
+\title{Проектирование и реализация сервиса для анализа экспрессии генов}
+\author{Зайцев К.В.\\
+Научный руководитель: Сергушичев А.А.}
+
+
+\input{preamble.latex}
+
+\begin{document}
+$include-before$
+
+\addtocounter{page}{2}
+
+$if(toc)$
+\tableofcontents
+$endif$
+
+$body$
+
+\bibliography{bib}{}
+
+$include-after$
+\end{document}

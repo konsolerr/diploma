@@ -1,0 +1,95 @@
+\likechapter{Приложения}
+
+\captionsetup[figure]{labelformat=empty}
+
+\begin{code}[language=R, basicstyle=\tiny\tt, title=Листинг 1]
+GeneExpressionDataSet <- setRefClass(
+	"GeneExpressionDataSet",
+    fields = list(
+		exp = "matrix",
+        annotation = "data.frame",
+        log_scale = "logical",
+        normalize = "logical",
+        log = "character",
+        prediction = "list",
+        name = "character"
+	),
+	methods = list(
+		initialize = function(exp, annotation, log_scale, normalize, log, prediction, name) {
+			exp <<- exp
+			annotation <<- annotation
+            log_scale <<- log_scale
+            normalize <<- normalize
+            log <<- log
+            prediction <<- prediction
+            name <<- name
+		},
+        heat_map = function(anno, n=NULL, k=NULL) {
+            library(preprocessCore)
+	
+	        prediction <- configure_construct_heat_map_exec()
+            if (!is.null(n) && !(n == prediction$n)) print("wrong prediction n") #SOME LOGGING HERE
+            if (is.null(n)) n = prediction$n
+	        if (!is.null(k) && !(n == prediction$k)) print("wrong prediction k") #SOME LOGGING HERE
+            if (is.null(k)) k = prediction$k   
+	
+            to_exec = c(
+                definition(n), definition(k), definition(anno),
+                "gene.exp.norm <- exp[sample(seq_len(nrow(exp))), ]",
+                "gene.exp.tscore <- tScore(gene.exp.norm)",
+                "gene.exp.mean <- apply(gene.exp.norm, 1, mean)",
+                "gene.exp.top <- gene.exp.tscore[head(order(gene.exp.mean, decreasing = T), n=n), ]",
+                "km <- kmeans(gene.exp.top, k)",
+                "data <- gene.exp.top[order(km$cluster), ]",
+                "selected_annotation = subset(annotation, select=c(anno))"
+            )
+            eval(parse(text=to_exec))
+	        HeatMap(data, selected_annotation, add_log(log, to_exec), prediction)
+        },
+        differential_expression = function(selected_annotation, state1, state2) {
+            state1 = strsplit(state1, " ")[[1]][3]
+            state2 = strsplit(state2, " ")[[1]][3]
+            to_exec = c(
+                "library(limma)",
+                definition(selected_annotation), definition(state1), definition(state2),
+                "design <- model.matrix(eval(parse(text=sprintf(\"~0+%s\", selected_annotation))), data=annotation)",
+                "fit <- lmFit(exp, design)",
+                "selected_contrasts <- sprintf(\"%s%s-%s%s\", selected_annotation, state1, selected_annotation, state2)",
+                "eval(parse(text=sprintf(\"make_contrasts <- makeContrasts(%s, levels=design)\", selected_contrasts)))",
+                "fit2 <- contrasts.fit(fit, make_contrasts)",
+                "fit2 <- eBayes(fit2)",
+                "diff_exp <- topTable(fit2, adjust.method=\"BH\", number=Inf)",
+                "write.table(diff_exp, file='diff_expression.tsv', quote=FALSE, sep='\t', col.names = NA)"
+            )
+            code = paste(to_exec, collapse="\n")
+            eval(parse(text=to_exec))
+            name = sprintf("Differential Expression Data Set %s at %s", selected_contrasts, Sys.time())
+            DifferentialExpression(diff_exp, add_log(log, code), name)
+        },
+		showKnit = function() {
+			library(knitr)
+			opts_knit$set(width=120)
+			strings = c(
+			"<div class='r-container'>",
+		        "Current dataset contains",
+		        "<!--rinline nrow(exp) -->",
+			"rows, featuring these samples: ",
+			"<!--rinline colnames(exp) -->",
+            "<br>Dataset log-scaled",
+            "<!--rinline log_scale -->",
+            "<br>Dataset normalized",
+            "<!--rinline normalize -->",
+		        "</div>")
+			string = paste(strings, collapse="")
+			val = knit2html(text=string, fragment.only=TRUE)
+			val
+		},
+		redo = function(exp_file, anno_file, log_scale, normalize) {
+		    build_gene_exp(prediction, exp_file, anno_file, log_scale, normalize)
+		}
+	)
+)
+\end{code}
+
+
+\image{interface}{Схема интерфейса}
