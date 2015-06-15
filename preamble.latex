@@ -3,7 +3,8 @@
 \usepackage{extsizes}
 \usepackage[a4paper, hmargin={30mm, 15mm}, vmargin={20mm, 20mm}]{geometry}
 \usepackage[absolute]{textpos}
-
+\usepackage{cmap}
+\usepackage{lscape}
 
 \usepackage{fontspec}
 \defaultfontfeatures{Mapping=tex-text}

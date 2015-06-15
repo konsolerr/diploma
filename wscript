@@ -9,9 +9,9 @@ def build(bld):
         Introduction.pd
         ch_First/chapter.latex
         ch_First/sec_Intro.pd
-        ch_First/sec_Moar.pd
         ch_First/sec_Solutions.pd
         ch_First/sec_Tools.pd
+        ch_First/sec_Moar.pd  
         ch_Second/chapter.latex
         ch_Second/sec_Bioc.pd
         ch_Second/sec_Web.pd
@@ -25,6 +25,7 @@ def build(bld):
         ch_Third/sec_Outro.pd
         Conclusion.pd
         Extras.pd
+        extras2.pd
     """
     bld(features='pandoc-merge', source=sources + ' bib.bib', target='main.latex',
             disabled_exts='fancy_lists', 

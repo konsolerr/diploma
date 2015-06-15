@@ -8,7 +8,7 @@
 \begin{document}
 $include-before$
 
-\addtocounter{page}{2}
+\addtocounter{page}{3}
 
 $if(toc)$
 \tableofcontents

@@ -2,6 +2,8 @@
   sensitive=false,
   keywords={class, TRUE, FALSE, function, return, null, catch, if, in, while, do, else, case},
   showstringspaces=false,
+  belowskip=0em,
+  aboveskip=0em,
   morecomment=[l]{\#},
   morestring=[b]',
   morestring=[b]",
