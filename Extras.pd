@@ -1,6 +1,6 @@
 \likechapter{Приложение А}
 
-\begin{code}[language=R, basicstyle=\tiny\tt, title=Листинг -- частная реализация интерфейса Dataset -- класс DifferentialExpression]
+\begin{code}[language=R, basicstyle=\tiny\tt, title=Листинг -- частная реализация интерфейса Dataset -- класс DifferentialExpression.]
 DifferentialExpression <- setRefClass(
 	"DifferentialExpression",
 	fields = list(
